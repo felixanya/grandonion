@@ -9,7 +9,7 @@ import (
 var workerPool chan chan jobque.Job
 
 func main() {
-	// workerPool 要是有带缓存的chan，不然会死锁
+	// 注意 这里记得workerPool是要带缓存的chan，不然会死锁
 	workerPool = make(chan chan jobque.Job, 100)
 	worker := jobque.NewWorker(workerPool)
 
@@ -19,7 +19,7 @@ func main() {
 		//payload := Payload{}
 		worker.JobChannel <- jobque.Job{}
 
-		time.Sleep(2 * time.Second)
+		time.Sleep(1 * time.Second)
 	}
 	fmt.Println("finish. shutdown worker")
 	worker.Stop()
