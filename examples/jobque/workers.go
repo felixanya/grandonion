@@ -26,10 +26,12 @@ func NewWorker(workerPool chan chan Job) Worker {
 
 func (w Worker) Start() {
 	go func() {
-		// register the current worker into the worker queue.
-		w.WorkerPool <- w.JobChannel
-		fmt.Println(">>>add jobChannel to workerPool>>>success.")
+
 		for {
+			// register the current worker into the worker queue.
+			w.WorkerPool <- w.JobChannel
+			fmt.Println(">>>add jobChannel to workerPool>>>success.")
+
 			select {
 			case job := <- w.JobChannel:
 				// receive a process request

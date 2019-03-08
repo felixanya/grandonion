@@ -5,7 +5,7 @@ import "testing"
 func TestNewDispatcher(t *testing.T) {
 	JobQueue = make(chan Job)
 
-	dispatcher := NewDispatcher(10)
+	dispatcher := NewDispatcher(100)
 
 	dispatcher.Run()
 
