@@ -1,8 +1,8 @@
 package http
 
 import (
-	"github.com/aaronize/grandonion/examples/jobque/http/controller/order"
-	"github.com/aaronize/grandonion/examples/jobque/http/controller/processor"
+	"github.com/aaronize/grandonion/examples/http/controller/order"
+	"github.com/aaronize/grandonion/examples/http/controller/processor"
 	"github.com/gin-gonic/gin"
 )
 

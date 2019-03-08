@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/aaronize/grandonion/examples/jobque/http"
+	"github.com/aaronize/grandonion/examples/http"
 )
 
 func main() {
