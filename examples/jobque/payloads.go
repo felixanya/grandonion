@@ -14,7 +14,7 @@ var (
 )
 
 type Payload struct {
-
+	AllocRes 	func() error
 }
 
 type PayloadCollection struct {

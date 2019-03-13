@@ -1,9 +1,28 @@
 package http
 
 import (
+	"fmt"
+	"github.com/aaronize/grandonion/examples/http/test"
 	"github.com/aaronize/grandonion/examples/jobque"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 )
+
+var (
+	DB 	*gorm.DB
+	JobQueue 	chan Job
+)
+
+type Job struct {
+	State 		string
+	Action 		func([]string) error
+	UID 		string
+	Parm 		[]string
+
+	Success		chan string
+	Fail 		chan error
+	Finish 		chan bool
+}
 
 
 type Server struct {
@@ -25,6 +44,8 @@ func NewServer(path string) *Server {
 
 // 初始化
 func (s *Server) initWorkerQue() error {
+	// 初始化Job
+	JobQueue = make(chan Job, 1000)
 
 	dispatcher := jobque.NewDispatcher(s.MaxWorkerNum)
 	dispatcher.Run()
@@ -32,22 +53,18 @@ func (s *Server) initWorkerQue() error {
 	return nil
 }
 
-func (s *Server) initRouter() error {
-	r := gin.Default()
+func initRouter(engine *gin.Engine) *gin.Engine {
+	// 添加中间件
+	engine.Use()
 
-	orderGroup := r.Group("/order")
-	proGroup := r.Group("/processor")
-	//vmRouter(r.Group("/vm"))
-	//resourceRouter(r.Group("/resource"))
+	// 开始路径
+	uperRoute := engine.Group("/v1")
+	RouteDispatcher(uperRoute)
 
-	orderRouter(orderGroup)
-	processorRouter(proGroup)
+	testRoute := engine.Group("/test")
+	test.TestDispatcher(testRoute)
 
-	err := r.Run(s.Listen)
-	if err != nil {
-		return err
-	}
-	return nil
+	return engine
 }
 
 func (s *Server) RunServer() error {
@@ -56,7 +73,12 @@ func (s *Server) RunServer() error {
 	server := NewServer(path)
 	// 初始化
 	server.initWorkerQue()
-	server.initRouter()
+
+	r := initRouter(gin.Default())
+	if err := r.Run(s.Listen); err != nil {
+		fmt.Println("Run server error", err.Error())
+		return err
+	}
 
 	return nil
 }

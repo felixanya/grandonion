@@ -1,27 +1,28 @@
 package http
 
 import (
-	"github.com/aaronize/grandonion/examples/http/controller/order"
-	"github.com/aaronize/grandonion/examples/http/controller/processor"
+	"github.com/aaronize/grandonion/examples/http/controller/idcs"
+	orderRouter "github.com/aaronize/grandonion/examples/http/controller/orders"
+	"github.com/aaronize/grandonion/examples/http/controller/pyhosts"
+	"github.com/aaronize/grandonion/examples/http/controller/vms"
 	"github.com/gin-gonic/gin"
 )
 
-func orderRouter(r *gin.RouterGroup)  {
+func RouteDispatcher(mid *gin.RouterGroup)  {
 
-	r.GET("/", order.Get)
-	r.POST("/", order.Add)
-	r.DELETE("/", order.Delete)
-	r.PUT("/", order.Update)
+	// 添加中间件
+	mid.Use()
+
+	order := mid.Group("/order")
+	vm := mid.Group("/vm")
+	//pro := mid.Group("/processor")
+	pyhost := mid.Group("/py")
+	idc := mid.Group("/idc")
+
+	orderRouter.OrderRouter(order)
+	vms.VMRoute(vm)
+	pyhosts.PyHostRoute(pyhost)
+	idcs.IdcRoute(idc)
 }
 
-func vmRouter(r *gin.RouterGroup) {
-
-}
-
-func resourceRouter(r *gin.RouterGroup) {
-
-}
-
-func processorRouter(r *gin.RouterGroup) {
-	r.POST("/msg", processor.Processor)
-}
+// 中间件

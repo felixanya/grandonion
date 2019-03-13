@@ -3,6 +3,7 @@ package jobque
 type Dispatcher struct {
 	WorkerPool 	chan chan Job
 	maxWorkers 	int
+	quit 		chan bool
 }
 
 func NewDispatcher(maxWorkers int) *Dispatcher {
@@ -20,6 +21,17 @@ func (d *Dispatcher) Run() {
 	go d.dispatcher()
 }
 
+func (d *Dispatcher) Stop() {
+	for ch := range d.WorkerPool{
+		close(ch)
+	}
+	close(d.WorkerPool)
+
+	go func() {
+		d.quit <- true
+	}()
+}
+
 func (d *Dispatcher) dispatcher() {
 	for {
 		select {
@@ -33,6 +45,8 @@ func (d *Dispatcher) dispatcher() {
 				// dispatch the job to the worker job channel
 				jobChannel <- job
 			}(job)
+		case <-d.quit:
+			return
 		}
 	}
 }
