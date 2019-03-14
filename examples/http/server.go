@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/aaronize/grandonion/examples/http/controller/order"
 	"github.com/aaronize/grandonion/examples/jobque"
 	"github.com/gin-gonic/gin"
 )
@@ -40,7 +41,7 @@ func (s *Server) initRouter() error {
 	//vmRouter(r.Group("/vm"))
 	//resourceRouter(r.Group("/resource"))
 
-	orderRouter(orderGroup)
+	order.OrderRouter(orderGroup)
 	processorRouter(proGroup)
 
 	err := r.Run(s.Listen)

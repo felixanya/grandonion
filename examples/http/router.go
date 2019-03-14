@@ -1,18 +1,11 @@
 package http
 
 import (
-	"github.com/aaronize/grandonion/examples/http/controller/order"
 	"github.com/aaronize/grandonion/examples/http/controller/processor"
 	"github.com/gin-gonic/gin"
 )
 
-func orderRouter(r *gin.RouterGroup)  {
 
-	r.GET("/", order.Get)
-	r.POST("/", order.Add)
-	r.DELETE("/", order.Delete)
-	r.PUT("/", order.Update)
-}
 
 func vmRouter(r *gin.RouterGroup) {
 
