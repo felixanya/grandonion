@@ -3,6 +3,7 @@ package http
 import (
 	"fmt"
 	"github.com/aaronize/grandonion/examples/http/test"
+	"github.com/aaronize/grandonion/examples/http/controller/order"
 	"github.com/aaronize/grandonion/examples/jobque"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -63,6 +64,8 @@ func initRouter(engine *gin.Engine) *gin.Engine {
 
 	testRoute := engine.Group("/test")
 	test.TestDispatcher(testRoute)
+	order.OrderRouter(orderGroup)
+	processorRouter(proGroup)
 
 	return engine
 }
