@@ -1,4 +1,4 @@
-package main
+package toml_demo
 
 import (
 	"sync"

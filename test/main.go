@@ -11,7 +11,7 @@ type Job struct{
 	State 	string
 }
 
-func main() {
+func main1() {
 	JobQueue = make(chan *Job, 10)
 
 	go handler(1)
