@@ -32,4 +32,11 @@ func main() {
 	dd = dpkg.NewD()
 	dd.SetKV("nihao", "shijie")
 	fmt.Println(dd.GetValue("nihao"))
+	fmt.Println("----------------------------------------------")
+
+	bt := bpkg.NewBt("say", "hello")
+	fmt.Println(bt.GetKey(), bt.GetVal())
+	bt.SetKey("said")
+	bt.SetVal("nihao")
+	fmt.Println(bt.GetKey(), bt.GetVal())
 }
