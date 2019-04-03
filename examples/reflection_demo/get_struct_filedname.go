@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/aaronize/grandonion/examples/reflection/model"
+	"github.com/aaronize/grandonion/examples/reflection_demo/model"
 	"log"
 	"reflect"
 )
