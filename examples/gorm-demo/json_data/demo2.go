@@ -12,10 +12,10 @@ import (
 
 const (
 	userName1 = "root"
-	password1 = "Da!chen1124"
-	ip1       = "39.108.171.31"
+	password1 = "*"
+	ip1       = "*"
 	port1     = "3306"
-	dbName1   = "gormdb"
+	dbName1   = "*"
 )
 
 func getVIP(c *gin.Context) {

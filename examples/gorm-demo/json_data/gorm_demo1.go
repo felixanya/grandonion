@@ -10,14 +10,13 @@ import (
 )
 
 var db *gorm.DB
-var err error
 
 const (
 	userName = "root"
-	password = "Da!chen1124"
-	ip       = "39.108.171.31"
+	password = "*"
+	ip       = "*"
 	port     = "3306"
-	dbName   = "gormdb"
+	dbName   = "*"
 )
 
 type Iplist_iplist struct {
@@ -33,6 +32,7 @@ type Iplist_iplist struct {
 //注意方法名大写，就是public
 //func ConnectionDB()  {
 func main() {
+	var err error
 	//构建连接："用户名:密码@tcp(IP:端口)/数据库?charset=utf8"
 	path := strings.Join([]string{userName, ":", password, "@tcp(", ip, ":", port, ")/", dbName, "?charset=utf8"}, "")
 	db, err = gorm.Open("mysql", path)
