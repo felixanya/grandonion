@@ -3,19 +3,29 @@ package Observer
 type ISubject interface {
 	Register(...IObserver)
 	Dismiss(...IObserver)
-	Notify()
+	Notify(*Event)
 }
 
 type Subject struct {
 	observers map[IObserver]struct{}
 }
 
-func (s *Subject) AddObservers(observers ...IObserver) {
-	s.observers = append(s.observers, observers...)
+func (s *Subject) Register(observers ...IObserver) {
+	for _, ob := range observers {
+		s.observers[ob] = struct{}{}
+	}
 }
 
-func (s *Subject) NotifyObservers() {
-	for k := range s.observers {
-		s.observers[k].Notify()
+func (s *Subject) Dismiss(observers ...IObserver) {
+	for _, ob := range observers {
+		delete(s.observers, ob)
 	}
+}
+
+func (s *Subject) Notify(event *Event) {
+	event.wg.Add(len(s.observers))
+	for ob := range s.observers {
+		go ob.Update(event)
+	}
+	event.wg.Wait()
 }
