@@ -1,12 +1,13 @@
 package Observer
 
 type ISubject interface {
-	AddObserver(observers ...IObserver)
-	NotifyObservers()
+	Register(...IObserver)
+	Dismiss(...IObserver)
+	Notify()
 }
 
 type Subject struct {
-	observers []IObserver
+	observers map[IObserver]struct{}
 }
 
 func (s *Subject) AddObservers(observers ...IObserver) {
