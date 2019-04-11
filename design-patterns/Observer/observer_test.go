@@ -1,6 +1,7 @@
 package Observer
 
 import (
+	"fmt"
 	"sync"
 	"testing"
 )
@@ -19,4 +20,9 @@ func TestObserver_Notify(t *testing.T) {
 	e := &Event{Data: "hello", wg: sync.WaitGroup{}}
 
 	sub.Notify(e)
+	fmt.Println("----------------")
+
+	sub.Dismiss(ob3)
+	e2 := &Event{Data: "nihao", wg: sync.WaitGroup{}}
+	sub.Notify(e2)
 }
