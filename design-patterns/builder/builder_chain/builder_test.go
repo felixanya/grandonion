@@ -12,5 +12,6 @@ func TestNewAllocator(t *testing.T) {
 		fmt.Println("分配资源错误,", err.Error())
 		return
 	}
+	fmt.Println("--------------------")
 	allocated.ListAllocated()
 }

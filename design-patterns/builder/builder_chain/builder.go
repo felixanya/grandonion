@@ -46,7 +46,7 @@ func (al *Allocator) AllocPyHost() IAllocator {
 }
 
 func (al *Allocator) Done() (IResource, error) {
-	fmt.Println("Done")
+	fmt.Println("Done!")
 	if al.err != nil {
 		return al.Allocated, al.err
 	}
