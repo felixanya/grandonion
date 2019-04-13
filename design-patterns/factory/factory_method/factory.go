@@ -6,15 +6,26 @@ type IBunShop interface {
 	Generate(string) IBun
 }
 
+func NewBunShop(name string) IBunShop {
+	switch name {
+	case "Babi":
+		return &BabiBunShop{}
+	case "Yonghe":
+		return &YongheBunShop{}
+	default:
+		return nil
+	}
+}
+
 type IBun interface {
 	Create()
 }
 
-type BabiBun struct {
+type BabiBunShop struct {
 
 }
 
-func (b *BabiBun) Generate(t string) IBun {
+func (b *BabiBunShop) Generate(t string) IBun {
 	switch t {
 	case "meat":
 		return &BabiMeatBun{}
@@ -41,11 +52,11 @@ func (vb *BabiVegetableBun) Create() {
 	fmt.Println("create BabiVegetableBun")
 }
 
-type YongHeBun struct {
+type YongheBunShop struct {
 
 }
 
-func (y *YongHeBun) Generate(t string) IBun {
+func (y *YongheBunShop) Generate(t string) IBun {
 	switch t {
 	case "meat":
 		return &YongHeMeatBun{}
