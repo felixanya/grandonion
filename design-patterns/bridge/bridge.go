@@ -2,6 +2,10 @@ package bridge
 
 import "fmt"
 
+/*
+强关联改换成弱关联，将两个角色之间的继承关系改为关联关系。由继承（或颜色在每个类中分别定义）改为组合。
+以形状、颜色等属性分为多个维度，每个维度一个类型，这些类型通过组合的方式关联在一起。复用的方式减少代码量。
+ */
 type DrawAPI interface {
 	DrawCircle(int, int, int)
 }
