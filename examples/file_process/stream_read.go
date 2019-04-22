@@ -10,10 +10,10 @@ import (
 )
 
 var (
-	FilePath = ""
+	FilePath = "./data.txt"
 	SendChanSize = 100000
 	ProducerNum = 10
-	Topic = "test_pm"
+	Topic = "test_"
 	Hosts = []string{""}
 )
 
@@ -41,13 +41,16 @@ func main() {
 	var upload2Que = func(sendMsg *sendMsg) {
 		//
 		kafkaClient.msgChan <- sendMsg
+		//fmt.Println(">>>send message is", string(sendMsg.value))
 	}
 
 	if err := ReadFile(FilePath, upload2Que); err != nil {
 		panic(err)
 	}
 
-	time.Sleep(5 * time.Second)
+	//time.Sleep(5 * time.Second)
+	select {
+	}
 }
 
 func ReadFile(filePath string, handle func(*sendMsg)) error {
@@ -57,7 +60,7 @@ func ReadFile(filePath string, handle func(*sendMsg)) error {
 		return err
 	}
 	buf := bufio.NewReader(f)
-
+	startTime := time.Now()
 	for {
 		line, _, err := buf.ReadLine()
 
@@ -67,13 +70,16 @@ func ReadFile(filePath string, handle func(*sendMsg)) error {
 		})
 
 		if err != nil {
-			if err == io.EOF{
+			if err == io.EOF {
 				return nil
 			}
 			return err
 		}
-		return nil
 	}
+	endTime := time.Now()
+	fmt.Println("spend time:", endTime.Sub(startTime).Seconds())
+
+	return nil
 }
 
 func NewKafkaClient(addr []string) *KafkaClient {
