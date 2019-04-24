@@ -1,0 +1,7 @@
+{
+  "FilePath":"./data.txt",
+  "SendChanSize":100000,
+  "ProducerNum":10,
+  "Topic":"test_",
+  "Hosts":[""]
+}

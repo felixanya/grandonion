@@ -2,20 +2,27 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
+	"errors"
+	"flag"
 	"fmt"
 	"github.com/Shopify/sarama"
 	"io"
+	"io/ioutil"
 	"os"
 	"time"
 )
 
-var (
-	FilePath = "./data.txt"
-	SendChanSize = 100000
-	ProducerNum = 10
-	Topic = "test_"
-	Hosts = []string{""}
-)
+var FilePath string
+
+type Config struct {
+	FilePath 		string		`json:"FilePath"`
+	SendChanSize 	int			`json:"SendChanSize"`
+	ProducerNum  	int			`json:"ProducerNum"`
+	Topic 			string		`json:"Topic"`
+	Hosts 			[]string	`json:"Hosts"`
+	WaitTime 		int64 		`json:"WaitTime"`
+}
 
 type KafkaClient struct {
 	addr 		[]string
@@ -24,6 +31,7 @@ type KafkaClient struct {
 	msgChan 	chan *sendMsg
 
 	quit 		chan bool
+	done 		chan bool
 }
 
 type sendMsg struct {
@@ -31,9 +39,20 @@ type sendMsg struct {
 	value 	[]byte
 }
 
+var conf *Config
 
 func main() {
-	kafkaClient := NewKafkaClient(Hosts)
+	flag.Parse()
+	if FilePath == "" {
+		panic("需要指定配置文件路径: ./upload -c /config/file/path")
+	}
+
+	conf = &Config{}
+	if err := conf.LoadConfiguration(FilePath); err != nil {
+		panic(err)
+	}
+
+	kafkaClient := NewKafkaClient(conf.Hosts)
 	if err := kafkaClient.InitAsyncProducers(); err != nil {
 		panic(err)
 	}
@@ -41,16 +60,14 @@ func main() {
 	var upload2Que = func(sendMsg *sendMsg) {
 		//
 		kafkaClient.msgChan <- sendMsg
-		//fmt.Println(">>>send message is", string(sendMsg.value))
 	}
 
-	if err := ReadFile(FilePath, upload2Que); err != nil {
+	if err := ReadFile(conf.FilePath, upload2Que); err != nil {
 		panic(err)
 	}
 
-	//time.Sleep(5 * time.Second)
-	select {
-	}
+	<- kafkaClient.done
+	//time.Sleep(time.Duration(conf.WaitTime) * time.Second)
 }
 
 func ReadFile(filePath string, handle func(*sendMsg)) error {
@@ -60,24 +77,23 @@ func ReadFile(filePath string, handle func(*sendMsg)) error {
 		return err
 	}
 	buf := bufio.NewReader(f)
-	startTime := time.Now()
 	for {
 		line, _, err := buf.ReadLine()
-
-		handle(&sendMsg{
-			topic: Topic,
-			value: line,
-		})
-
 		if err != nil {
 			if err == io.EOF {
+				if err := os.Truncate(filePath, 0); err != nil {
+					return err
+				}
 				return nil
 			}
 			return err
 		}
+
+		handle(&sendMsg{
+			topic: conf.Topic,
+			value: line,
+		})
 	}
-	endTime := time.Now()
-	fmt.Println("spend time:", endTime.Sub(startTime).Seconds())
 
 	return nil
 }
@@ -92,9 +108,10 @@ func NewKafkaClient(addr []string) *KafkaClient {
 	return &KafkaClient{
 		addr: addr,
 		config: config,
-		num: ProducerNum,
-		msgChan: make(chan *sendMsg, SendChanSize),
+		num: conf.ProducerNum,
+		msgChan: make(chan *sendMsg, conf.SendChanSize),
 		quit: make(chan bool),
+		done: make(chan bool),
 	}
 }
 
@@ -117,17 +134,24 @@ func (kc *KafkaClient) GenerateSingleAsyncProducer() error {
 	}
 
 	go func(p sarama.AsyncProducer) {
+		timer := time.NewTimer(time.Duration(conf.WaitTime) * time.Second)
+		defer timer.Stop()
+
 		for {
 			select {
 			case err := <- p.Errors():
 				if err != nil {
 					fmt.Printf("[ERROR] %s input queue failed, %s\n", time.Now().Format("2006-01-02 15:04:05.999999999"), err.Error())
 				}
+				timer.Reset(time.Duration(conf.WaitTime) * time.Second)
 			case <- p.Successes():
 				fmt.Printf("[INFO] %s input queue success. \n", time.Now().Format("2006-01-02 15:04:05.999999999"))
+				timer.Reset(time.Duration(conf.WaitTime) * time.Second)
 			case <- kc.quit:
 				fmt.Println("quit result listener")
 				return
+			case <- timer.C:
+				kc.done <- true
 			}
 		}
 	}(producer)
@@ -152,6 +176,30 @@ func (kc *KafkaClient) GenerateSingleAsyncProducer() error {
 	return nil
 }
 
-func (kc *KafkaClient) CloseProducer() {
+func (kc *KafkaClient) CloseProducers() {
 	close(kc.quit)
+}
+
+func (c *Config) LoadConfiguration(path string) error {
+	if path == "" {
+		path = "./config.json"
+	}
+	content, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
+
+	if len(content) == 0 {
+		return errors.New("config file is empty. ")
+	}
+
+	if err := json.Unmarshal(content, c); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func init() {
+	flag.StringVar(&FilePath, "c", "./config.json", "指定配置文件路径")
 }
