@@ -13,10 +13,11 @@ import (
 	"time"
 )
 
-var FilePath string
+var ConfFilePath string
+var FilePath 	 string
 
 type Config struct {
-	FilePath 		string		`json:"FilePath"`
+	//FilePath 		string		`json:"FilePath"`
 	SendChanSize 	int			`json:"SendChanSize"`
 	ProducerNum  	int			`json:"ProducerNum"`
 	Topic 			string		`json:"Topic"`
@@ -43,12 +44,12 @@ var conf *Config
 
 func main() {
 	flag.Parse()
-	if FilePath == "" {
+	if ConfFilePath == "" {
 		panic("需要指定配置文件路径: ./upload -c /config/file/path")
 	}
 
 	conf = &Config{}
-	if err := conf.LoadConfiguration(FilePath); err != nil {
+	if err := conf.LoadConfiguration(ConfFilePath); err != nil {
 		panic(err)
 	}
 
@@ -62,7 +63,7 @@ func main() {
 		kafkaClient.msgChan <- sendMsg
 	}
 
-	if err := ReadFile(conf.FilePath, upload2Que); err != nil {
+	if err := ReadFile(FilePath, upload2Que); err != nil {
 		panic(err)
 	}
 
@@ -201,5 +202,6 @@ func (c *Config) LoadConfiguration(path string) error {
 }
 
 func init() {
-	flag.StringVar(&FilePath, "c", "./config.json", "指定配置文件路径")
+	flag.StringVar(&ConfFilePath, "c", "./producer_config.json", "指定配置文件路径")
+	flag.StringVar(&FilePath, "f", "", "指定上传至kafka的数据文件路径")
 }
