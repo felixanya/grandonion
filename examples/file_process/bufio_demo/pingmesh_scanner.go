@@ -7,7 +7,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/Shopify/sarama"
-	"io"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -86,10 +85,10 @@ func ReadFileUseScanner(filePath string, handle func(*sendMsg)) error {
 		if line == "" {
 			continue
 		}
+		line = strings.Trim(line, "\n")
 
 		var data map[string]interface{}
 		if err := json.Unmarshal([]byte(line), &data); err != nil {
-			fmt.Printf("json unmarshal error: %s\n", line)
 			continue
 		}
 
@@ -101,35 +100,6 @@ func ReadFileUseScanner(filePath string, handle func(*sendMsg)) error {
 	if err := os.Truncate(filePath, 0); err != nil {
 		return err
 	}
-	return nil
-}
-
-func ReadFile(filePath string, handle func(*sendMsg)) error {
-	f, err := os.Open(filePath)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	buf := bufio.NewReader(f)
-	for {
-		line, _, err := buf.ReadLine()
-		if err != nil {
-			if err == io.EOF {
-				if err := os.Truncate(filePath, 0); err != nil {
-					return err
-				}
-				return nil
-			}
-			return err
-		}
-
-		handle(&sendMsg{
-			topic: conf.Topic,
-			value: line,
-		})
-	}
-
 	return nil
 }
 
