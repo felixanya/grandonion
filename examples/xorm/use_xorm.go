@@ -16,9 +16,13 @@ func UseXORM() {
 		fmt.Println("new xorm engine error.", err.Error())
 		return
 	}
+	fmt.Println("connect db success")
 
 
-	engine.Select().Where().OrderBy().Find()
+}
+
+func main() {
+	UseXORM()
 }
 
 
