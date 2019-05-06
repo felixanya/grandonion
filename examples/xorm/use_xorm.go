@@ -8,6 +8,10 @@ import (
 
 var engine *xorm.Engine
 
+type Servers struct {
+
+}
+
 func UseXORM() {
 
 	var err error
@@ -17,7 +21,6 @@ func UseXORM() {
 		return
 	}
 	fmt.Println("connect db success")
-
 
 }
 
