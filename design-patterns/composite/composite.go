@@ -25,17 +25,17 @@ type IDeveloper interface {
 
 // manager角色类
 type Manager struct {
-	name 		string
-	salary 		float32
-	position 	string
-	Employees 	[]IEmployee
+	name      string
+	salary    float32
+	position  string
+	Employees []IEmployee
 }
 
 func NewManager(name, position string, salary float32) IManager {
 	return &Manager{
-		name: name,
-		position: position,
-		salary: salary,
+		name:      name,
+		position:  position,
+		salary:    salary,
 		Employees: make([]IEmployee, 0),
 	}
 }
@@ -47,7 +47,7 @@ func (m *Manager) AddEmp(emp IEmployee) {
 func (m *Manager) RemoveEmp(emp IEmployee) {
 	for i, e := range m.Employees {
 		if e == emp {
-			m.Employees = append(m.Employees[:i], m.Employees[i + 1:]...)
+			m.Employees = append(m.Employees[:i], m.Employees[i+1:]...)
 		}
 	}
 }
@@ -61,16 +61,16 @@ func (m *Manager) PrintInfo() {
 
 // developer角色类
 type Developer struct {
-	name 		string
-	salary 		float32
-	position 	string
+	name     string
+	salary   float32
+	position string
 }
 
 func NewDeveloper(name, position string, salary float32) IDeveloper {
 	return &Developer{
-		name: name,
+		name:     name,
 		position: position,
-		salary: salary,
+		salary:   salary,
 	}
 }
 
