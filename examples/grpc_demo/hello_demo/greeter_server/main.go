@@ -6,13 +6,13 @@ import (
 	pb "github.com/aaronize/grandonion/examples/grpc_demo/hello_demo/helloworld"
 	"google.golang.org/grpc"
 
-	"net"
 	"log"
+	"net"
 )
 
 const port = ":50051"
 
-type server struct {}
+type server struct{}
 
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	log.Printf("Received: %v", in.Name)
