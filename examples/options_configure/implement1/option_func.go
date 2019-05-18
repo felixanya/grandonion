@@ -9,8 +9,10 @@ import (
 
 type Identifier func(string) error
 
-// 很好的既封装来了字段又封装了结构体，外部只能通过提供的函数来对指定的配置信息进行修改
-// 这种方式在grpc中的Dial的配置连接信息中有所应用，另外在httputil的配置连接信息中也有十分类似的实现。
+// 利用闭包实现配置
+// 这种方法既很好的封装了配置字段和结构体，外部只能通过提供的函数来对指定的配置信息进行修改。
+// 这种方式在grpc中的Dial的配置连接信息中有所应用，
+// 另外在httputil的配置连接信息中也有十分类似的实现。
 // 对比发现，以下实现比httputil中的实现封装的更好。
 type executorOptions struct {
 	action 			string
