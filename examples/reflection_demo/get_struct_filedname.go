@@ -2,10 +2,22 @@ package main
 
 import (
 	"fmt"
-	"github.com/aaronize/grandonion/examples/reflection_demo/model"
 	"log"
 	"reflect"
 )
+
+type TestStruct struct {
+	UID 		string 		`json:"uid"`
+	OUID 		string 		`json:"ouid"`
+	PyUID 		string 		`json:"py_uid"`
+	HostName 	string		`json:"host_name"`
+	Core 		int 		`json:"core"`
+	Mem 		int			`json:"mem"`
+	Disk 		int			`json:"disk"`
+	OS 			string		`json:"os"`
+
+	InstanceID 	string		`json:"instance_id"`
+}
 
 /*
 使用反射获取结构体字段名称
@@ -30,7 +42,7 @@ func GetFieldName(structName interface{}) []string {
 
 
 func main() {
-	fields := GetFieldName(model.VM{})
+	fields := GetFieldName(TestStruct{})
 	for i, f := range fields {
 		fmt.Printf("第%d个字段名称是：%s\n", i, f)
 	}
