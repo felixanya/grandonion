@@ -1,14 +1,15 @@
-package toml_demo
+package main
 
 import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
+	"reflect"
 )
 
 func main() {
 	viper.SetConfigName("conf")
-	viper.AddConfigPath(".")
+	viper.AddConfigPath("./examples/loadConf/toml-demo")
 
 	viper.SetConfigType("toml")
 
@@ -23,9 +24,17 @@ func main() {
 		fmt.Println("Using config:", viper.ConfigFileUsed())
 	}
 
-	serviceMap := viper.GetStringMap("service")
+	configMap := viper.Get(".")
+
+	writeDbConf := fmt.Sprintf("%s.database.write_db", "prod")
+	serviceMap := viper.GetStringMap(writeDbConf)
 
 	fmt.Println(">>>service map>>>:", serviceMap)
+	fmt.Println(">>>config map>>>:", configMap)
 
-	select {}
+	fmt.Println(">>>db port>>>:", serviceMap["port"])
+	fmt.Println(">>>if port equals 3306>>>:", serviceMap["port"] == int64(3306))
+	fmt.Println(">>>port data type>>>:", reflect.TypeOf(serviceMap["port"]).String())
+
+	//select {}
 }

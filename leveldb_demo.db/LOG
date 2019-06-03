@@ -1,0 +1,105 @@
+=============== Jun 3, 2019 (CST) ===============
+20:17:35.833019 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+20:17:35.859020 db@open opening
+20:17:35.862021 version@stat F·[] S·0B[] Sc·[]
+20:17:35.867021 db@janitor F·2 G·0
+20:17:35.867021 db@open done T·8.0005ms
+=============== Jun 3, 2019 (CST) ===============
+20:21:55.019844 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+20:21:55.035845 version@stat F·[] S·0B[] Sc·[]
+20:21:55.035845 db@open opening
+20:21:55.035845 journal@recovery F·1
+20:21:55.036845 journal@recovery recovering @1
+20:21:55.039845 memdb@flush created L0@2 N·1 S·376B "192...10,v1":"192...10,v1"
+20:21:55.042845 version@stat F·[1] S·376B[376B] Sc·[0.25]
+20:21:55.048845 db@janitor F·3 G·0
+20:21:55.049845 db@open done T·13.0007ms
+=============== Jun 3, 2019 (CST) ===============
+20:22:14.591963 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+20:22:14.613964 version@stat F·[1] S·376B[376B] Sc·[0.25]
+20:22:14.613964 db@open opening
+20:22:14.613964 journal@recovery F·1
+20:22:14.614964 journal@recovery recovering @3
+20:22:14.616965 memdb@flush created L0@5 N·1 S·376B "192...10,v3":"192...10,v3"
+20:22:14.617965 version@stat F·[2] S·752B[752B] Sc·[0.50]
+20:22:14.623965 db@janitor F·4 G·0
+20:22:14.623965 db@open done T·10.0006ms
+=============== Jun 3, 2019 (CST) ===============
+20:23:00.913613 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+20:23:00.934614 version@stat F·[2] S·752B[752B] Sc·[0.50]
+20:23:00.934614 db@open opening
+20:23:00.934614 journal@recovery F·1
+20:23:00.935614 journal@recovery recovering @6
+20:23:00.937614 memdb@flush created L0@8 N·1 S·392B "192...10,v5":"192...10,v5"
+20:23:00.938614 version@stat F·[3] S·1KiB[1KiB] Sc·[0.75]
+20:23:00.951615 db@janitor F·5 G·0
+20:23:00.951615 db@open done T·17.001ms
+=============== Jun 3, 2019 (CST) ===============
+20:23:15.679457 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+20:23:15.699458 version@stat F·[3] S·1KiB[1KiB] Sc·[0.75]
+20:23:15.699458 db@open opening
+20:23:15.699458 journal@recovery F·1
+20:23:15.700458 journal@recovery recovering @9
+20:23:15.702458 memdb@flush created L0@11 N·1 S·392B "192...10,v7":"192...10,v7"
+20:23:15.703458 version@stat F·[4] S·1KiB[1KiB] Sc·[1.00]
+20:23:15.712459 db@janitor F·6 G·0
+20:23:15.712459 db@open done T·13.0007ms
+20:23:15.712459 table@compaction L0·4 -> L1·0 S·1KiB Q·8
+=============== Jun 3, 2019 (CST) ===============
+20:24:31.956820 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+20:24:31.975821 version@stat F·[4] S·1KiB[1KiB] Sc·[1.00]
+20:24:31.975821 db@open opening
+20:24:31.975821 journal@recovery F·1
+20:24:31.975821 journal@recovery recovering @12
+20:24:31.978821 memdb@flush created L0@14 N·1 S·392B "192...10,v9":"192...10,v9"
+20:24:31.979821 version@stat F·[5] S·1KiB[1KiB] Sc·[1.25]
+20:24:31.985822 db@janitor F·7 G·0
+20:24:31.986822 db@open done T·11.0007ms
+20:24:31.986822 table@compaction L0·5 -> L1·0 S·1KiB Q·10
+=============== Jun 3, 2019 (CST) ===============
+21:29:17.116038 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+21:29:17.150040 version@stat F·[5] S·1KiB[1KiB] Sc·[1.25]
+21:29:17.150040 db@open opening
+21:29:17.150040 journal@recovery F·1
+21:29:17.150040 journal@recovery recovering @15
+21:29:17.156041 memdb@flush created L0@17 N·1 S·392B "192...10,v11":"192...10,v11"
+21:29:17.157041 version@stat F·[6] S·2KiB[2KiB] Sc·[1.50]
+21:29:17.168041 db@janitor F·8 G·0
+21:29:17.169041 db@open done T·19.0011ms
+21:29:17.169041 table@compaction L0·6 -> L1·0 S·2KiB Q·12
+=============== Jun 3, 2019 (CST) ===============
+21:30:29.230163 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+21:30:29.251164 version@stat F·[6] S·2KiB[2KiB] Sc·[1.50]
+21:30:29.251164 db@open opening
+21:30:29.251164 journal@recovery F·1
+21:30:29.252164 journal@recovery recovering @18
+21:30:29.254164 memdb@flush created L0@20 N·1 S·392B "192...10,v13":"192...10,v13"
+21:30:29.255164 version@stat F·[7] S·2KiB[2KiB] Sc·[1.75]
+21:30:29.263165 db@janitor F·9 G·0
+21:30:29.263165 db@open done T·12.0007ms
+21:30:29.264165 table@compaction L0·7 -> L1·0 S·2KiB Q·15
+=============== Jun 3, 2019 (CST) ===============
+21:30:53.483550 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+21:30:53.504551 version@stat F·[7] S·2KiB[2KiB] Sc·[1.75]
+21:30:53.504551 db@open opening
+21:30:53.504551 journal@recovery F·1
+21:30:53.504551 journal@recovery recovering @21
+21:30:53.507552 memdb@flush created L0@23 N·1 S·391B "192...11,v15":"192...11,v15"
+21:30:53.509552 version@stat F·[8] S·3KiB[3KiB] Sc·[2.00]
+21:30:53.524553 db@janitor F·10 G·0
+21:30:53.524553 db@open done T·20.0011ms
+21:30:53.524553 table@move L0@23 -> L1
+21:30:53.524553 version@stat F·[7 1] S·3KiB[2KiB 391B] Sc·[1.75 0.00]
+21:30:53.525553 table@compaction L0·7 -> L1·0 S·2KiB Q·17
+=============== Jun 3, 2019 (CST) ===============
+21:31:01.505009 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+21:31:01.524010 version@stat F·[7 1] S·3KiB[2KiB 391B] Sc·[1.75 0.00]
+21:31:01.524010 db@open opening
+21:31:01.524010 journal@recovery F·1
+21:31:01.525010 journal@recovery recovering @24
+21:31:01.530010 memdb@flush created L0@26 N·1 S·389B "192...11,v17":"192...11,v17"
+21:31:01.531010 version@stat F·[8 1] S·3KiB[3KiB 391B] Sc·[2.00 0.00]
+21:31:01.539011 db@janitor F·11 G·0
+21:31:01.539011 db@open done T·15.0009ms
+21:31:01.539011 table@compaction L0·1 -> L1·1 S·780B Q·18
+21:31:01.542011 table@build created L1@29 N·1 S·389B "192...11,v17":"192...11,v17"

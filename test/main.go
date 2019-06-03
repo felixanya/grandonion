@@ -2,35 +2,38 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"github.com/satori/go.uuid"
 )
 
-var JobQueue chan *Job
-
-type Job struct{
-	State 	string
-}
-
-func main1() {
-	JobQueue = make(chan *Job, 10)
-
-	go handler(1)
-	j := Job{State: "creating"}
-	JobQueue <- &j
-
-	fmt.Printf("print in main func: %p \n", &j)
-	select {}
-}
-
-func handler(timeout time.Duration) {
-
-	select {
-	case job := <- JobQueue:
-		fmt.Printf("print in handler: %p \n", job)
-		return
-	case <- time.After(timeout * time.Second):
-		fmt.Println("超时了")
-		return
+func main() {
+	uid, err := uuid.NewV4()
+	if err != nil {
+		panic(err)
 	}
+	fmt.Println("v4:", uid.String())
+	uid, err = uuid.NewV4()
+	fmt.Println("v4:", uid.String())
+	uid, err = uuid.NewV4()
+	fmt.Println("v4:", uid.String())
+	uid, err = uuid.NewV4()
+	fmt.Println("v4:", uid.String())
+	uid, err = uuid.NewV4()
+	fmt.Println("v4:", uid.String())
+	fmt.Println("-----------------")
+	uid, err = uuid.NewV1()
+	fmt.Println("v1:", uid.String())
+	uid, err = uuid.NewV1()
+	fmt.Println("v1:", uid.String())
+	uid, err = uuid.NewV1()
+	fmt.Println("v1:", uid.String())
+	uid, err = uuid.NewV1()
+	fmt.Println("v1:", uid.String())
+	uid, err = uuid.NewV1()
+	fmt.Println("v1:", uid.String())
+	alist := make([]int, 0)
+	alist = append(alist, []int{4, 2, 3}...)
+
+	fmt.Println(alist)
+
 }
 
