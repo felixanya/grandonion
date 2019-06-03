@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package redis;
+
+//redis上报数据格式
+message ReportRequest {
+    float delay = 2;
+    uint32 timestamp = 3;
+    float loss = 4;
+    string key = 1;
+    uint32 expire_time = 6;
+}
+
+//返回数据格式
+message ReportResponse {
+    string info = 1;
+}
+
+//redis提供的上报数据的服务
+service Redis{
+    rpc Report (ReportRequest) returns (ReportResponse) {}
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+message AgentResponse {
+    message Meta {
+        uint32 code = 1;
+        string error = 2;
+    }
+    Meta meta = 1;
+    string data = 2;
+}

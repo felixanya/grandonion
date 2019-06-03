@@ -1,4 +1,4 @@
-package toml_demo
+package main
 
 import (
 	"fmt"

@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	db, err := leveldb.OpenFile("/root/test/", nil)
+	db, err := leveldb.OpenFile("./hosts_info.db", nil)
 	if err != nil {
 		fmt.Println("open leveldb error", err.Error())
 		return
@@ -20,4 +20,6 @@ func main() {
 
 	data, err := db.Get([]byte("say"), nil)
 	fmt.Println("say:", string(data))
+
 }
+

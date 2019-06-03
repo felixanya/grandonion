@@ -44,12 +44,13 @@ func UseXORM() {
 	fmt.Println(switcher)
 
 	var switcher2 Switches
-	switcher2.Info = "demo1测试数据4"
-	switcher2.Version = 3
-	_, err = engine.ID(1).Update(&switcher2)
+	switcher2.Info = "demo1测试数据321"
+	switcher2.Version = 5
+	count, err := engine.Where("ip = ?", "192.168.168.1").Update(&switcher2)
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("count is ", count)
 }
 
 func main() {

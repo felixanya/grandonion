@@ -1,0 +1,22 @@
+{
+  "Listen": ":8712",
+  "Logger": {
+    "LogPath": "./toredis_error.log",
+    "MaxBackups": 10,
+    "MaxSize": 100,
+    "MaxAge": 28,
+    "Level": "debug"
+  },
+  "Redis": {
+    "Cluster": [
+      "192.168.168.1",
+      "192.168.168.2",
+      "192.168.168.3",
+      "192.168.168.4"
+    ],
+    "PoolSize": 6000,
+    "Host": "",
+    "Password": "",
+    "DB": 0
+  }
+}
