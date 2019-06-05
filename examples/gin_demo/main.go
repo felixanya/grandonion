@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func main() {
@@ -26,6 +27,12 @@ func main() {
 			fmt.Println("param: ", i)
 		}
 		return
+	})
+	//r.GET("/test/", func(c *gin.Context) {
+	//	c.JSON(http.StatusOK, gin.H{"message": "with /"})
+	//})
+	r.GET("/test", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "without /"})
 	})
 
 	r.Run(":9900")

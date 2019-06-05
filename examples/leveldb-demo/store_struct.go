@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/syndtr/goleveldb/leveldb"
+	"github.com/syndtr/goleveldb/leveldb/opt"
 	"log"
 	"time"
 )
@@ -106,7 +107,7 @@ func (d *DB) putServerInfo(serverInfo *ServerInfo) error {
 	if err != nil {
 		return err
 	}
-	return d.ldb.Put([]byte(serverInfo.Ip), bytes, nil)
+	return d.ldb.Put([]byte(serverInfo.Ip), bytes, &opt.WriteOptions{Sync: true})
 }
 
 func (d *DB) getServerInfo(ip string) (*ServerInfo, error) {
@@ -129,6 +130,14 @@ func (d *DB) getPortList(ip string) ([]PortInfo, error) {
 	return serverInfo.PortsInfo, nil
 }
 
+func (d *DB) batchServerInfo() error {
+	//leveldb.Batch{}
+	//d.ldb.Write()
+	d.ldb.Put([]byte(""), []byte(""), &opt.WriteOptions{Sync: true})
+
+	return nil
+}
+
 func (d *DB) getServerStatus(ip string) (string, string, error) {
 	serverInfo, err := d.getServerInfo(ip)
 	if err != nil {
@@ -139,6 +148,7 @@ func (d *DB) getServerStatus(ip string) (string, string, error) {
 }
 
 func (d *DB) Iterator() error {
+	// 会创建一个snapshot
 	iter := d.ldb.NewIterator(nil, nil)
 	for iter.Next() {
 		key := iter.Key()
