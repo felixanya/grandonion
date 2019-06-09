@@ -70,7 +70,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ret, err := db.getServerInfo("192.168.168.10")
+	ret, err := db.getServerInfo("192.168.168.134")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -111,10 +111,10 @@ func (d *DB) putServerInfo(serverInfo *ServerInfo) error {
 }
 
 func (d *DB) getServerInfo(ip string) (*ServerInfo, error) {
-	bytes, err := d.ldb.Get([]byte(ip), nil)
-	if err != nil {
-		return nil, err
-	}
+	bytes, _ := d.ldb.Get([]byte(ip), nil)
+	//if err != nil {
+	//	return nil, err
+	//}
 	serverInfo := &ServerInfo{}
 	if err := json.Unmarshal(bytes, serverInfo); err != nil {
 		return nil, err
