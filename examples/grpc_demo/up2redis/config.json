@@ -1,5 +1,8 @@
 {
   "Listen": ":8712",
+  "chan_size": 500000,
+  "uploader_pool": 10,
+  "limit": 500000,
   "Logger": {
     "LogPath": "./up2redis_error.log",
     "MaxBackups": 10,

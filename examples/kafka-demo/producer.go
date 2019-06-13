@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/Shopify/sarama"
+	"log"
 )
 
 type ProducerPool struct {
@@ -15,8 +16,11 @@ type ProducerPool struct {
 
 func (pp *ProducerPool) Run() {
 
-	for i := 0; i < pp.ProducerNum; i++ {
-		go pp.genAsyncProducer()
+	//for i := 0; i < pp.ProducerNum; i++ {
+	//	go pp.genAsyncProducer()
+	//}
+	if err := pp.genAsyncProducer(); err != nil {
+		log.Fatal(err)
 	}
 }
 
@@ -27,8 +31,11 @@ func (pp *ProducerPool) genAsyncProducer() error {
 		return err
 	}
 	defer producer.AsyncClose()
-
+	//fmt.Printf("producer out: %p", producer)
+	log.Printf("producer out: %p", producer)
 	go func(p sarama.AsyncProducer) {
+		//fmt.Printf("producer in: %p", p)
+		log.Printf("producer in: %p", p)
 		for {
 			select {
 			case err := <- p.Errors():

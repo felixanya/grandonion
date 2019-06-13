@@ -10,8 +10,11 @@ import (
 
 type Config struct {
 	Listen 			string
-	Logger 		LoggerC
+	Logger 			LoggerC
 	Redis 			RedisC
+	ChanSize 		int 		`json:"chan_size"`
+	UploaderPool 	int 		`json:"uploader_pool"`
+	GoroutineLimit 	int 		`json:"limit"`
 }
 
 // load config
