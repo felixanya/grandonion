@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	address = "192.168.168.154:8712"
+	address = "localhost:8712"
 )
 
 func main() {
