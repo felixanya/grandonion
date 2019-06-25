@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/Shopify/sarama"
 	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -69,6 +70,7 @@ func main() {
 
 	<- kafkaClient.done
 	//time.Sleep(time.Duration(conf.WaitTime) * time.Second)
+	kafkaClient.CloseProducers()
 }
 
 func ReadFileUseScanner(filePath string, handle func(*sendMsg)) error {
@@ -87,10 +89,10 @@ func ReadFileUseScanner(filePath string, handle func(*sendMsg)) error {
 		}
 		line = strings.Trim(line, "\n")
 
-		var data map[string]interface{}
-		if err := json.Unmarshal([]byte(line), &data); err != nil {
-			continue
-		}
+		//var data map[string]interface{}
+		//if err := json.Unmarshal([]byte(line), &data); err != nil {
+		//	continue
+		//}
 
 		handle(&sendMsg{
 			topic: conf.Topic,
@@ -126,7 +128,10 @@ func (kc *KafkaClient) InitAsyncProducers() error {
 	}
 
 	for i := 0; i < kc.num; i++ {
-		kc.GenerateSingleAsyncProducer()
+		err := kc.GenerateSingleAsyncProducer()
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	return nil
@@ -154,6 +159,7 @@ func (kc *KafkaClient) GenerateSingleAsyncProducer() error {
 				timer.Reset(time.Duration(conf.WaitTime) * time.Second)
 			case <- kc.quit:
 				fmt.Println("quit result listener")
+				//p.AsyncClose()
 				return
 			case <- timer.C:
 				kc.done <- true
@@ -173,6 +179,7 @@ func (kc *KafkaClient) GenerateSingleAsyncProducer() error {
 				p.Input() <- toSend
 			case <- kc.quit:
 				fmt.Println("quit producer")
+				p.AsyncClose()
 				return
 			}
 		}
