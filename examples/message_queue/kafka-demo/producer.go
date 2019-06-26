@@ -30,9 +30,11 @@ func (pp *ProducerPool) genAsyncProducer() error {
 	if err != nil {
 		return err
 	}
-	defer producer.AsyncClose()
+	//defer producer.AsyncClose()
 	//fmt.Printf("producer out: %p", producer)
 	log.Printf("producer out: %p", producer)
+
+	// 监听结果
 	go func(p sarama.AsyncProducer) {
 		//fmt.Printf("producer in: %p", p)
 		log.Printf("producer in: %p", p)
@@ -40,34 +42,43 @@ func (pp *ProducerPool) genAsyncProducer() error {
 			select {
 			case err := <- p.Errors():
 				if err != nil {
-					fmt.Println("")
+					fmt.Println(err)
 				}
 			case <- p.Successes():
 				fmt.Println("推送kafka成功")
-
-			// TODO 退出信号
+			case <- pp.quit:
+				// TODO IMPORTANT！！不要在这里关闭producer，要在input消息的goroutine里关闭！
+				//p.AsyncClose()
+				return
 			}
 		}
 	}(producer)
 
-	for {
-		select {
-		case pb := <- pp.InputQueue:
-			plainData := make(map[string]interface{})
-			if err := json.Unmarshal(pb, &plainData); err != nil {
-				fmt.Println("json parse error", err.Error())
-				continue
+	go func(p sarama.AsyncProducer) {
+		for {
+			select {
+			case pb := <- pp.InputQueue:
+				plainData := make(map[string]interface{})
+				if err := json.Unmarshal(pb, &plainData); err != nil {
+					fmt.Println("json parse error", err.Error())
+					continue
+				}
+				var topic = "testing"
+				msg := &sarama.ProducerMessage{
+					Topic: topic,
+					Value: sarama.ByteEncoder(pb),
+				}
+
+				producer.Input() <- msg
+			case <- pp.quit:
+				// TODO 必须要在这里关闭producer！！
+				// 调用AsyncClose()函数时，会使用close()函数显式关闭producer中的channel，如success, errors, input, retry等。
+				// channel的关闭使这里监听input管道的goroutine短时间内收到一些零值，上报到队列。
+				p.AsyncClose()
+				return
 			}
-
-			var topic string= ""
-
-			msg := &sarama.ProducerMessage{
-				Topic: topic,
-				Value: sarama.ByteEncoder(pb),
-			}
-
-			producer.Input() <- msg
-
 		}
-	}
+	}(producer)
+
+	return nil
 }

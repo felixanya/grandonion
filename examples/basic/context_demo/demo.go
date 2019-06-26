@@ -30,18 +30,20 @@ func main() {
 	env := map[string]string{"GOOS": "linux", "GOARCH": "amd64", "CGO_ENABLE": "0"}
 	// 装饰器模式？建造者模式？
 	ctx, cancel := context.WithCancel(context.WithValue(context.Background(), "env", env))
-	go func(ctx context.Context) {
-		for {
-			select {
-			case <- ctx.Done():
-				fmt.Println("stop...")
-				return
-			default:
-				fmt.Println("goroutine running...GOOS:", ctx.Value("env").(map[string]string)["GOOS"])
-				time.Sleep(2 * time.Second)
+	for i := 0; i < 5; i++ {
+		go func(ctx context.Context) {
+			for {
+				select {
+				case <- ctx.Done():
+					fmt.Println("stop...")
+					return
+				default:
+					fmt.Println("goroutine running...GOOS:", ctx.Value("env").(map[string]string)["GOOS"])
+					time.Sleep(2 * time.Second)
+				}
 			}
-		}
-	}(ctx)
+		}(ctx)
+	}
 
 	time.Sleep(10 * time.Second)
 	fmt.Println("notify to stop")
