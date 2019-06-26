@@ -1,0 +1,47 @@
+title = "upangu_conf"
+
+[listen]
+net = "tcp"
+addr = ":12500"
+
+[dev]
+[dev.database]
+max_idle_conn = 10
+max_open_conn = 1000
+debug = true
+debug_log = "./log/"
+
+    [dev.database.write_db]
+    host = "localhost"
+    name = "testdb"
+    port = 3307
+    user = "aaron"
+    password = "123456"
+
+    [dev.database.read_db]
+    host = "localhost"
+    name = "testdb"
+    port = 3307
+    user = "aaron"
+    password = "123456"
+
+[prod]
+[prod.database]
+max_idle_conn = 10
+max_open_conn = 1000
+debug = true
+debug_log = "./log/"
+
+    [prod.database.write_db]
+    host = "localhost"
+    name = "prodb"
+    port = 3306
+    user = "root"
+    password = "admin#!"
+
+    [prod.database.read_db]
+    host = "localhost"
+    name = "prodb"
+    port = 3306
+    user = "root"
+    password = "admin#!"
