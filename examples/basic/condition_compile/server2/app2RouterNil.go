@@ -1,6 +1,6 @@
-// +build !app2
+// +build !app2,app1
 
-package server
+package server2
 
 import (
 	"github.com/gin-gonic/gin"

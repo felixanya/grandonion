@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/aaronize/grandonion/examples/basic/condition_compile/json_test"
-	"github.com/aaronize/grandonion/examples/basic/condition_compile/server"
+	"github.com/aaronize/grandonion/examples/basic/condition_compile/server2"
 	"log"
 )
 
@@ -21,7 +21,12 @@ func main() {
 		fmt.Println(string(b))
 	}
 
-	s := server.Server{}
+	//s := server.Server{}
+	//if err := s.Start(); err != nil {
+	//	log.Fatalf(err.Error())
+	//}
+
+	s := server2.Server{}
 	if err := s.Start(); err != nil {
 		log.Fatalf(err.Error())
 	}
