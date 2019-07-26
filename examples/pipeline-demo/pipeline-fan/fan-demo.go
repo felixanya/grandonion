@@ -39,7 +39,7 @@ func merge(cs ...<-chan int) <-chan int {
 	collect := func(in <-chan int) {
 		defer wg.Done()
 		for num := range in {
-			out <- num
+			out <- num * num
 		}
 	}
 

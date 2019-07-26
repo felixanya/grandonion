@@ -11,11 +11,19 @@ import (
 	"log"
 	"os"
 	"strings"
+	"sync/atomic"
 	"time"
 )
 
-var ConfFilePath string
-var FilePath 	 string
+var (
+	ConfFilePath string
+	FilePath 	 string
+
+	successCount int64
+	failCount    int64
+
+	conf *Config
+)
 
 type Config struct {
 	//FilePath 		string		`json:"FilePath"`
@@ -41,9 +49,11 @@ type sendMsg struct {
 	value 	[]byte
 }
 
-var conf *Config
-
 func main() {
+	defer func() {
+		fmt.Printf("%d:%d", atomic.LoadInt64(&successCount), atomic.LoadInt64(&failCount))
+	}()
+
 	flag.Parse()
 	if ConfFilePath == "" {
 		panic("需要指定配置文件路径: ./upload -c /config/file/path")
@@ -150,11 +160,13 @@ func (kc *KafkaClient) GenerateSingleAsyncProducer() error {
 		for {
 			select {
 			case err := <- p.Errors():
+				atomic.AddInt64(&failCount, 1)
 				if err != nil {
 					fmt.Printf("[ERROR] %s input queue failed, %s\n", time.Now().Format("2006-01-02 15:04:05.999999999"), err.Error())
 				}
 				timer.Reset(time.Duration(conf.WaitTime) * time.Second)
 			case <- p.Successes():
+				atomic.AddInt64(&successCount, 1)
 				fmt.Printf("[INFO] %s input queue success. \n", time.Now().Format("2006-01-02 15:04:05.999999999"))
 				timer.Reset(time.Duration(conf.WaitTime) * time.Second)
 			case <- kc.quit:
