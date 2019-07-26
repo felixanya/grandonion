@@ -70,8 +70,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ret, err := db.getServerInfo("192.168.168.134")
+	ret, err := db.getServerInfo("192.168.168.11")
 	if err != nil {
+		fmt.Println(">>>>>>>")
 		log.Fatal(err)
 	}
 	fmt.Printf("%+v\n", ret)
@@ -81,6 +82,24 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Printf("Status: %s, SubStatus: %s\n", status, substatus)
+
+	fmt.Println(">>>>>>>>>update data>>>>>>>>>>")
+	serverInfo2 := &ServerInfo{
+		Ip: "192.168.168.11",
+		Status: "preconf",
+		SubStatus: "preconf_failed",
+		Info: "预配置失败",
+	}
+	if err := db.putServerInfo(serverInfo2); err != nil {
+		log.Fatal(err)
+	}
+
+	ret2, err := db.getServerInfo("192.168.168.11")
+	if err != nil {
+		fmt.Println(">>>>>>>")
+		log.Fatal(err)
+	}
+	fmt.Printf("%+v\n", ret2)
 
 	fmt.Printf("----------------------\n")
 	db.Iterator()
@@ -111,10 +130,10 @@ func (d *DB) putServerInfo(serverInfo *ServerInfo) error {
 }
 
 func (d *DB) getServerInfo(ip string) (*ServerInfo, error) {
-	bytes, _ := d.ldb.Get([]byte(ip), nil)
-	//if err != nil {
-	//	return nil, err
-	//}
+	bytes, err := d.ldb.Get([]byte(ip), nil)
+	if err != nil {
+		return nil, err
+	}
 	serverInfo := &ServerInfo{}
 	if err := json.Unmarshal(bytes, serverInfo); err != nil {
 		return nil, err
@@ -160,7 +179,8 @@ func (d *DB) Iterator() error {
 			log.Printf("json unmarshal error, %s\n", err.Error())
 			continue
 		}
-		fmt.Printf("Status: %s, SubStatus: %s \n", serverInfo.Status, serverInfo.SubStatus)
+		//fmt.Printf("Status: %s, SubStatus: %s \n", serverInfo.Status, serverInfo.SubStatus)
+		fmt.Printf("%+v\n", serverInfo)
 	}
 	fmt.Printf("end")
 	return nil
