@@ -3,7 +3,6 @@ package strategy
 /*
 策略模式
 	NO if-elseif
-
  */
 
 type IArithmetic interface {

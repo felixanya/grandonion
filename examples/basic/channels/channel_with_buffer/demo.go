@@ -5,7 +5,13 @@ import (
 	"time"
 )
 
+/*
+ 带缓冲的channel
+	chan为空时，会阻塞读
+	chan为满时，会阻塞写
+ */
 func main() {
+	// 带缓冲的channel
 	ch := make(chan string, 2)
 	n := 5
 

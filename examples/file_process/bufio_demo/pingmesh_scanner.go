@@ -11,6 +11,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"time"
 )
@@ -22,12 +23,14 @@ var (
 	successCount int64
 	failCount    int64
 
-	conf *Config
+	conf         *Config
+	hasFail      bool
+	failedChan   chan []byte
 )
 
 type Config struct {
-	//FilePath 		string		`json:"FilePath"`
 	SendChanSize 	int			`json:"SendChanSize"`
+	FailedChaneSize int         `json:"FailedChaneSize"`
 	ProducerNum  	int			`json:"ProducerNum"`
 	Topic 			string		`json:"Topic"`
 	Hosts 			[]string	`json:"Hosts"`
@@ -41,7 +44,8 @@ type KafkaClient struct {
 	msgChan 	chan *sendMsg
 
 	quit 		chan bool
-	done 		chan bool
+	//done 		chan bool
+	wg          *sync.WaitGroup
 }
 
 type sendMsg struct {
@@ -51,7 +55,7 @@ type sendMsg struct {
 
 func main() {
 	defer func() {
-		fmt.Printf("%d:%d", atomic.LoadInt64(&successCount), atomic.LoadInt64(&failCount))
+		fmt.Printf("{success:%d, fail:%d}\n", atomic.LoadInt64(&successCount), atomic.LoadInt64(&failCount))
 	}()
 
 	flag.Parse()
@@ -63,6 +67,9 @@ func main() {
 	if err := conf.LoadConfiguration(ConfFilePath); err != nil {
 		panic(err)
 	}
+
+	failedChan = make(chan []byte, conf.FailedChaneSize)
+	hasFail = false
 
 	kafkaClient := NewKafkaClient(conf.Hosts)
 	if err := kafkaClient.InitAsyncProducers(); err != nil {
@@ -78,9 +85,56 @@ func main() {
 		panic(err)
 	}
 
-	<- kafkaClient.done
+	//<- kafkaClient.done
+	kafkaClient.wg.Wait()
+
 	//time.Sleep(time.Duration(conf.WaitTime) * time.Second)
 	kafkaClient.CloseProducers()
+
+	if !hasFail {
+		return
+	}
+
+	f, err := os.OpenFile(FilePath, os.O_WRONLY | os.O_CREATE, 0666)
+	if err != nil {
+		log.Fatalf("写入文件失败, %s", err.Error())
+	}
+	defer f.Close()
+
+	buf := bufio.NewWriter(f)
+
+	//for {
+	//	if bt, ok := <- failedChan; ok {
+	//		if _, err := buf.WriteString(string(bt)); err != nil {
+	//			log.Println("写入文件失败,", err.Error())
+	//		}
+	//	} else {
+	//		break
+	//	}
+	//}
+
+	//ticker := time.NewTicker(2 * time.Second)
+	//defer ticker.Stop()
+	timer := time.NewTimer(1 * time.Second)
+
+OUTTER:
+	for {
+		select {
+		case bt := <-failedChan:
+			if _, err := buf.WriteString(string(bt)); err != nil {
+				log.Println("写入文件失败,", err.Error())
+			}
+			timer.Reset(1 * time.Second)
+		case <-timer.C:
+			break OUTTER
+		}
+	}
+
+	if err := buf.Flush(); err != nil {
+		log.Println("写入文件失败,", err.Error())
+	}
+
+	return
 }
 
 func ReadFileUseScanner(filePath string, handle func(*sendMsg)) error {
@@ -109,8 +163,11 @@ func ReadFileUseScanner(filePath string, handle func(*sendMsg)) error {
 			value: []byte(line),
 		})
 	}
-	if err := os.Truncate(filePath, 0); err != nil {
-		return err
+	//if err := os.Truncate(filePath, 0); err != nil {
+	//	return err
+	//}
+	if err := os.Remove(filePath); err != nil {
+		log.Println("remove file error, ", err.Error())
 	}
 	return nil
 }
@@ -128,7 +185,7 @@ func NewKafkaClient(addr []string) *KafkaClient {
 		num: conf.ProducerNum,
 		msgChan: make(chan *sendMsg, conf.SendChanSize),
 		quit: make(chan bool),
-		done: make(chan bool),
+		wg: &sync.WaitGroup{},
 	}
 }
 
@@ -142,6 +199,7 @@ func (kc *KafkaClient) InitAsyncProducers() error {
 		if err != nil {
 			log.Fatal(err)
 		}
+		kc.wg.Add(1)
 	}
 
 	return nil
@@ -164,17 +222,22 @@ func (kc *KafkaClient) GenerateSingleAsyncProducer() error {
 				if err != nil {
 					fmt.Printf("[ERROR] %s input queue failed, %s\n", time.Now().Format("2006-01-02 15:04:05.999999999"), err.Error())
 				}
+				bt, _ := err.Msg.Value.Encode()
+				failedChan <- bt
+				hasFail = true
+
 				timer.Reset(time.Duration(conf.WaitTime) * time.Second)
 			case <- p.Successes():
 				atomic.AddInt64(&successCount, 1)
-				fmt.Printf("[INFO] %s input queue success. \n", time.Now().Format("2006-01-02 15:04:05.999999999"))
+				//fmt.Printf("[INFO] %s input queue success. \n", time.Now().Format("2006-01-02 15:04:05.999999999"))
 				timer.Reset(time.Duration(conf.WaitTime) * time.Second)
 			case <- kc.quit:
-				fmt.Println("quit result listener")
+				//fmt.Println("quit result listener")
 				//p.AsyncClose()
 				return
 			case <- timer.C:
-				kc.done <- true
+				//kc.done <- true
+				kc.wg.Done()
 			}
 		}
 	}(producer)
@@ -190,7 +253,7 @@ func (kc *KafkaClient) GenerateSingleAsyncProducer() error {
 				}
 				p.Input() <- toSend
 			case <- kc.quit:
-				fmt.Println("quit producer")
+				//fmt.Println("quit producer")
 				p.AsyncClose()
 				return
 			}
