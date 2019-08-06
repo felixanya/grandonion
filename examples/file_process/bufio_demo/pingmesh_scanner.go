@@ -231,13 +231,14 @@ func (kc *KafkaClient) GenerateSingleAsyncProducer() error {
 				atomic.AddInt64(&successCount, 1)
 				//fmt.Printf("[INFO] %s input queue success. \n", time.Now().Format("2006-01-02 15:04:05.999999999"))
 				timer.Reset(time.Duration(conf.WaitTime) * time.Second)
-			case <- kc.quit:
-				//fmt.Println("quit result listener")
-				//p.AsyncClose()
-				return
+			//case <- kc.quit:
+			//	//fmt.Println("quit result listener")
+			//	//p.AsyncClose()
+			//	return
 			case <- timer.C:
 				//kc.done <- true
 				kc.wg.Done()
+				return
 			}
 		}
 	}(producer)

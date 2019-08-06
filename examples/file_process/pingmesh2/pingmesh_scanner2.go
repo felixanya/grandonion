@@ -29,7 +29,7 @@ var (
 
 type Config struct {
     SendChanSize 	int			`json:"SendChanSize"`
-    FailedChaneSize int         `json:"FailedChaneSize"`
+    FailedChanSize int          `json:"FailedChanSize"`
     ProducerNum  	int			`json:"ProducerNum"`
     Topic 			string		`json:"Topic"`
     Hosts 			[]string	`json:"Hosts"`
@@ -54,7 +54,7 @@ type sendMsg struct {
 
 func main() {
     defer func() {
-        fmt.Printf("{success:%d, fail:%d}\n", atomic.LoadInt64(&successCount), atomic.LoadInt64(&failCount))
+        fmt.Printf("{'success':%d, 'fail':%d}\n", atomic.LoadInt64(&successCount), atomic.LoadInt64(&failCount))
     }()
 
     flag.Parse()
@@ -67,7 +67,7 @@ func main() {
         panic(err)
     }
 
-    failedChan = make(chan []byte, conf.FailedChaneSize)
+    failedChan = make(chan []byte, conf.FailedChanSize)
 
     kafkaClient := NewKafkaClient(conf.Hosts)
     if err := kafkaClient.InitAsyncProducers(); err != nil {
@@ -205,13 +205,14 @@ func (kc *KafkaClient) GenerateSingleAsyncProducer() error {
                 atomic.AddInt64(&successCount, 1)
                 //fmt.Printf("[INFO] %s input queue success. \n", time.Now().Format("2006-01-02 15:04:05.999999999"))
                 timer.Reset(time.Duration(conf.WaitTime) * time.Second)
-            case <- kc.quit:
-                //fmt.Println("quit result listener")
-                //p.AsyncClose()
-                return
+            //case <- kc.quit:
+            //    //fmt.Println("quit result listener")
+            //    //p.AsyncClose()
+            //    return
             case <- timer.C:
                 //kc.done <- true
                 kc.wg.Done()
+                return
             }
         }
     }(producer)
