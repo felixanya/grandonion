@@ -1,0 +1,1 @@
+// 汇编文件绕过编译器检查方法体，(missing function body 错误)
