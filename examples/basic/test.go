@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+    "fmt"
+    "time"
+)
 
 const (
     _ = iota
@@ -25,4 +28,6 @@ func main() {
     fmt.Println(RoomPlanTwo)
 
     fmt.Println(ServerCleanOne)
+
+    time.Sleep(2 * time.Second)
 }
