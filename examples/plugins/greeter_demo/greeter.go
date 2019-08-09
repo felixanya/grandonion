@@ -1,4 +1,4 @@
-package main
+package greeter_demo
 
 //import "plugin"; ...
 import (
