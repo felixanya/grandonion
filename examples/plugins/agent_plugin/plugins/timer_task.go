@@ -51,7 +51,8 @@ func (t *TimerTask) Enable() error {
 func (t *TimerTask) Disable() error {
 	t.available = false
 
-	t.done <- true
+	//t.done <- true
+	close(t.done)
 	return nil
 }
 

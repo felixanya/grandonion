@@ -53,6 +53,11 @@ func (p *PluginExecutor) Execute(pluginName string) error {
 		return err
 	}
 
+	// enable plugin
+	if err := concretePlugin.Enable(); err != nil {
+		return err
+	}
+
 	go func() {
 		input := struct {
 			Interval    int     `json:"interval"`
