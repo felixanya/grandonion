@@ -8,12 +8,12 @@ import (
 
 func FailPointer() {
 	var outerVar = "declare in out scope"
-	failpoint.Inject("failpoint-name-for-demo", func(val failpoint.Value) {
+	failpoint.Inject("failpoint-name-for-config", func(val failpoint.Value) {
 		fmt.Println("unit-test", val, outerVar)
 	})
 
 	time.Sleep(3 * time.Second)
-	failpoint.Disable("failpoint-name-for-demo")
+	failpoint.Disable("failpoint-name-for-config")
 
 	time.Sleep(3 * time.Second)
 }

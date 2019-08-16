@@ -6,9 +6,12 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 	"plugin"
 	"time"
 )
+
+var defaultPluginPath = []string{"./plugins/", "/var/lib/grandonion/plugins/", "/var/run/grandonion/plugins/"}
 
 type PluginOutPut struct {
 	Status  string
@@ -33,7 +36,11 @@ func (p *PluginExecutor) Execute(pluginName string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
-	pluginPath := fmt.Sprintf("./plugins/%s.so", pluginName)
+	//pluginPath := fmt.Sprintf("./plugins/%s.so", pluginName)
+	pluginPath, err := p.findPlugin(pluginName)
+	if err != nil {
+		return err
+	}
 	plg, err := plugin.Open(pluginPath)
 	if err != nil {
 		return err
@@ -111,4 +118,15 @@ func (p *PluginExecutor) Execute(pluginName string) error {
 	}
 
 	return nil
+}
+
+func (p *PluginExecutor) findPlugin(pluginName string) (string, error) {
+	for _, dp := range defaultPluginPath {
+		_, err := os.Stat(fmt.Sprintf("%s%s.so", dp, pluginName))
+		if err == nil || os.IsExist(err) {
+			return fmt.Sprintf("%s%s.so", dp, pluginName), nil
+		}
+	}
+
+	return "", errors.New("plugin not found")
 }

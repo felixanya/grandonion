@@ -9,7 +9,7 @@ import (
 
 func main() {
 	viper.SetConfigName("conf")
-	viper.AddConfigPath("./examples/loadConf/toml-demo")
+	viper.AddConfigPath("./examples/loadConf/toml-config")
 
 	viper.SetConfigType("toml")
 
