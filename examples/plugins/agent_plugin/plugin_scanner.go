@@ -1,6 +1,9 @@
 package agent_plugin
 
-var defaultPluginPaths = []string{"/var/lib/prjname/plugin/", "/var/lib/run/prjname/plugin/"}
+var defaultPluginPaths = []string{
+    "/var/lib/prjname/plugin/",
+    "/var/lib/run/prjname/plugin/",
+}
 
 type Scanner struct {
     pluginPaths     []string
