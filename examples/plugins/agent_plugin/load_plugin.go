@@ -16,6 +16,8 @@ var defaultPluginPath = []string{"./plugins/", "/var/lib/grandonion/plugins/", "
 type PluginOutPut struct {
 	Status  string
 	Message string
+	Error   string
+	Code    int
 	Data    interface{}
 }
 

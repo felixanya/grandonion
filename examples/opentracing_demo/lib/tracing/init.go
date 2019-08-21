@@ -19,7 +19,7 @@ func Init(service string) (opentracing.Tracer, io.Closer) {
 		},
 	}
 	tracer, closer, err := cfg.New(service, config.Logger(jaeger.StdLogger))
-	//tracer, closer, err := cfg.NewTracer(config.Logger(jaeger.StdLogger))
+	//tracer, closer, err := cfg.NewTracer(config.toml.Logger(jaeger.StdLogger))
 	if err != nil {
 		panic(fmt.Sprintf("ERR: cannot init Jaeger: %v\n", err))
 	}

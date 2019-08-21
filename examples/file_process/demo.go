@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-    _, err := os.Stat("config.json")
+    _, err := os.Stat("config.toml.json")
     if err != nil {
         //log.Println(err)
         if os.IsExist(err) {
