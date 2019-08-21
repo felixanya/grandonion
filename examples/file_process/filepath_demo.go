@@ -23,4 +23,12 @@ func main() {
         log.Fatal(err)
     }
     fmt.Println(">>>", fileNames)
+
+    fmt.Println(">>>", filepath.FromSlash(path)) // 使用分隔符替代slash('/')
+    fmt.Println(">>>", filepath.Clean(path))
+    rel, err := filepath.Rel("node.log", path)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println(">>>", rel)
 }
