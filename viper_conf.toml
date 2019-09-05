@@ -1,0 +1,8 @@
+title = "viper_config"
+
+bind = "192.168.168.111"
+port = 10010
+
+[loggers]
+path = "/var/log/viper_demo2/access.log"
+level = "debug"
