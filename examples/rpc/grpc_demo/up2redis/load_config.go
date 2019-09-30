@@ -15,7 +15,7 @@ type Config struct {
 	PoolSize int 		`json:"pool_size"`
 }
 
-// load config
+// load config.toml
 func (c *Config) LoadConfig(path string) error {
 	if path == "" {
 		return errors.New("path is null")

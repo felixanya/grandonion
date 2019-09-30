@@ -46,7 +46,7 @@ var conf *Config
 func main() {
 	flag.Parse()
 	if ConfFilePath == "" {
-		panic("需要指定配置文件路径: ./upload -c /config/file/path")
+		panic("需要指定配置文件路径: ./upload -c /config.toml/file/path")
 	}
 
 	conf = &Config{}
@@ -217,7 +217,7 @@ func (kc *KafkaClient) CloseProducers() {
 
 func (c *Config) LoadConfiguration(path string) error {
 	if path == "" {
-		path = "./config.json"
+		path = "./config.toml.json"
 	}
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -225,7 +225,7 @@ func (c *Config) LoadConfiguration(path string) error {
 	}
 
 	if len(content) == 0 {
-		return errors.New("config file is empty. ")
+		return errors.New("config.toml file is empty. ")
 	}
 
 	if err := json.Unmarshal(content, c); err != nil {

@@ -30,7 +30,7 @@ func NewEmptyConfig() *Config {
 }
 
 func ParseConfig(path string) *Config {
-    log.Printf("Using config file: [%s]\n", path)
+    log.Printf("Using config.toml file: [%s]\n", path)
 
     config := NewConfig()
 

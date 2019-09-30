@@ -60,7 +60,7 @@ func foo4(req string, ctx context.Context) (reply string){
 }
 
 func main() {
-	tracer, closer := initJaeger("jaeger-config")
+	tracer, closer := initJaeger("jaeger-config.toml")
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)//StartspanFromContext创建新span时会用到
 

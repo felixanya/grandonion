@@ -27,7 +27,7 @@ func main() {
 	}
 
 	cobra.OnInitialize(loadConf)
-	RootCmd.PersistentFlags().StringVarP(&confFile, "config", "c", "", "config file")
+	RootCmd.PersistentFlags().StringVarP(&confFile, "config.toml", "c", "", "config.toml file")
 
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -50,7 +50,7 @@ func loadConf() {
 	}
 
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		fmt.Println("Using config.toml file:", viper.ConfigFileUsed())
 	} else {
 		fmt.Println(err.Error())
 		return

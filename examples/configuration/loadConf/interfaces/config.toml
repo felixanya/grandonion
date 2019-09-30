@@ -1,0 +1,5 @@
+title = "config_conf"
+
+[producer]
+hosts = ["192.168.168.154:9092", "192.168.168.153:9092"]
+topic = "testing_config"

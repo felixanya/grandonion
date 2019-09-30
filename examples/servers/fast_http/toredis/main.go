@@ -8,7 +8,7 @@ import (
 )
 
 var configPath string
-const DefaultConfigPath = "./config.json"
+const DefaultConfigPath = "./config.toml.json"
 
 var rootCmd = cobra.Command{
 	Use: "toredis",
@@ -25,7 +25,7 @@ func main() {
 }
 
 func init() {
-	rootCmd.Flags().StringVarP(&configPath, "config", "c", "", "specify config file path.")
+	rootCmd.Flags().StringVarP(&configPath, "config.toml", "c", "", "specify config.toml file path.")
 }
 
 func Run(cmd *cobra.Command, args []string) error {
@@ -38,10 +38,10 @@ func Run(cmd *cobra.Command, args []string) error {
 		Config: &server.Config{},
 	}
 	if err := s.Config.LoadConfig(conf); err != nil {
-		fmt.Println("Load config error,", err)
+		fmt.Println("Load config.toml error,", err)
 		os.Exit(1)
 	}
-	fmt.Printf("Using config %s\n", conf)
+	fmt.Printf("Using config.toml %s\n", conf)
 	fmt.Println("listen:", s.Config.Listen)
 	fmt.Println("log:", s.Config.Logger.MaxAge)
 	fmt.Println("cluster:", s.Config.Redis.Cluster)

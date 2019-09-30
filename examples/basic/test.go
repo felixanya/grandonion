@@ -2,32 +2,34 @@ package main
 
 import (
     "fmt"
-    "time"
 )
 
 const (
-    _ = iota
-    RoomPlan
-    ResDeploy
-    NetConf
-    ServerDeploy
-    ServerClean
-    RoomExtends
+    minute float64 = 1.0
+    hour   float64 = 60 * minute
+    day    float64 = 24 * 60 * minute
 
-    RoomPlanOne = 101
-    RoomPlanTwo = iota
+    normalIsolationTime      = 2 * day
+    emergencyIsolationTime   = 2 * hour
+    maxRetentionTime         = 7 * day
+    defaultWaitTimeout       = 10 * minute
 
-    ServerCleanOne
+    waitLLDPUploadTimeout    = defaultWaitTimeout
+    waitRebootTimeout        = defaultWaitTimeout
+    waitOsCleanResultTimeout = defaultWaitTimeout
 )
 
 func main() {
-    fmt.Println(RoomPlan)
-    fmt.Println(RoomExtends)
+    fmt.Printf("%.2f\n", minute)
+    fmt.Printf("%.2f\n", hour)
+    fmt.Printf("%.2f\n", day)
 
-    fmt.Println(RoomPlanOne)
-    fmt.Println(RoomPlanTwo)
+    fmt.Printf("%.2f\n", maxRetentionTime)
 
-    fmt.Println(ServerCleanOne)
+    fmt.Printf("%t\n", isValid())
 
-    time.Sleep(2 * time.Second)
+}
+
+func isValid() bool {
+    return normalIsolationTime >= emergencyIsolationTime
 }

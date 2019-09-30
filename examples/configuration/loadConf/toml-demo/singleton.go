@@ -33,7 +33,7 @@ type Logger struct {
 	Path 	string
 }
 
-const DEFAULT_CONF_PATH = "../config/conf.toml"
+const DEFAULT_CONF_PATH = "../config.toml/conf.toml"
 
 var (
 	cfg 	*Config

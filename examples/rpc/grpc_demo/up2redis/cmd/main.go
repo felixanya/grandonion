@@ -8,7 +8,7 @@ import (
 
 var (
 	configPath string
-	defaultConfigPath = "./config.json"
+	defaultConfigPath = "./config.toml.json"
 )
 
 var rootCmd = cobra.Command{
@@ -19,7 +19,7 @@ var rootCmd = cobra.Command{
 		if configPath != "" {
 			path = configPath
 		}
-		log.Println("Using config ", path)
+		log.Println("Using config.toml ", path)
 		server := up2redis2.Server{Config: &up2redis2.Config{}}
 		if err := server.Config.LoadConfig(path); err != nil {
 			log.Fatalf("start server error. %s", err.Error())
@@ -38,5 +38,5 @@ func main() {
 }
 
 func init() {
-	rootCmd.Flags().StringVarP(&configPath, "config", "c", "", "specify config file path.")
+	rootCmd.Flags().StringVarP(&configPath, "config.toml", "c", "", "specify config.toml file path.")
 }
