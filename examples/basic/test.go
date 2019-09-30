@@ -27,6 +27,7 @@ func main() {
     fmt.Printf("%.2f\n", maxRetentionTime)
 
     fmt.Printf("%t\n", isValid())
+
 }
 
 func isValid() bool {
